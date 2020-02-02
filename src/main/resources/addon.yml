@@ -1,0 +1,8 @@
+name: ABC
+main: world.bentobox.abc.ABC
+version: ${version}${build.number}
+icon: GOLD_BAR
+
+prefix: ABC
+
+authors: [tastybento]
