@@ -1,0 +1,14 @@
+# ABC Configuration
+abc:
+  command:
+    # The ABC admin command.
+    # To define alias, just separate commands with white space.
+    admin: abc
+  # Transaction announcement server host
+  servers: broker.mqttdashboard.com
+  # UUID of player to receive payments. Make sure this is accurate
+  # because all payments are final and cannot be reversed.
+  # Player must have made an account on mc.tastybento.us to receive funds.
+  # Format must include dashes, e.g., 5988eecd-1dcd-4080-a843-785b62419
+  # Google 'Minecraft UUID lookup' if you need to find out your UUID.
+  admin-uuid: 5988eecd-1dcd-4080-a843-000785b62419

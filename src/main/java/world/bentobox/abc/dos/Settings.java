@@ -14,12 +14,12 @@ public class Settings implements ConfigObject {
     @ConfigComment("Player command for ABC")
     @ConfigComment("To define alias, just separate commands with white space.")
     @ConfigEntry(path = "abc.command.island")
-    private String islandCommand = "island is skyblock sb";
+    private String islandCommand = "abcpay";
 
     @ConfigComment("The ABC admin command.")
     @ConfigComment("To define alias, just separate commands with white space.")
     @ConfigEntry(path = "abc.command.admin")
-    private String adminCommand = "bsbadmin bsb skyblockadmin sbadmin sba";
+    private String adminCommand = "abc";
 
 
     @ConfigComment("Transaction announcement server host")
@@ -33,6 +33,10 @@ public class Settings implements ConfigObject {
     @ConfigComment("Google 'Minecraft UUID lookup' if you need to find out your UUID.")
     @ConfigEntry(path = "abc.admin-uuid")
     private UUID adminUUID = UUID.fromString("5988eecd-1dcd-4080-a843-785b62419");
+
+    @ConfigComment("Name of your server")
+    @ConfigEntry(path = "abc.server-name")
+    private String serverName = "A BentoBox Server";
 
     /**
      * @return the islandCommand
@@ -88,6 +92,20 @@ public class Settings implements ConfigObject {
      */
     public void setAdminUUID(UUID adminUUID) {
         this.adminUUID = adminUUID;
+    }
+
+    /**
+     * @return the serverName
+     */
+    public String getServerName() {
+        return serverName;
+    }
+
+    /**
+     * @param serverName the serverName to set
+     */
+    public void setServerName(String serverName) {
+        this.serverName = serverName;
     }
 
 

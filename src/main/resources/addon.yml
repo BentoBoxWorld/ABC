@@ -6,3 +6,5 @@ icon: GOLD_BAR
 prefix: ABC
 
 authors: [tastybento]
+
+softdepend: AcidIsland, BSkyBlock, CaveBlock, SkyGrid
