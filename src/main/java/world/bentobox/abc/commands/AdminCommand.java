@@ -2,7 +2,6 @@ package world.bentobox.abc.commands;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -12,14 +11,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.map.MapView;
 
-import com.google.gson.Gson;
-
 import world.bentobox.abc.ABC;
 import world.bentobox.abc.dos.Code;
 import world.bentobox.abc.qr.QRCodeGenerator;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.user.User;
-import world.bentobox.bentobox.database.Database;
 
 /**
  * Admin command to make QR codes
@@ -61,26 +57,18 @@ public class AdminCommand extends CompositeCommand {
         // Command is abc [cost] [command]
         // Create QR code elements
         Code qrCode = new Code();
-        qrCode.setNonce(UUID.randomUUID());
         qrCode.setAmount(Long.valueOf(args.get(0)));
         // Create command
         qrCode.setCommand(String.join(" ", args.stream().skip(1).collect(Collectors.toList())));
         qrCode.setId(((ABC)getAddon()).getSettings().getAdminUUID());
         qrCode.setPayTo(((ABC)getAddon()).getSettings().getServerName());
-        // Fake transaction ID
-        qrCode.setTxId(UUID.randomUUID().toString());
-        // Fake hash
-        qrCode.setHash(UUID.randomUUID().toString());
-        // Make the QR code data
-        Gson gson = ((ABC)getAddon()).getGson();
-        String data = gson.toJson(qrCode);
+
         // Make the map
         MapView map = Bukkit.createMap(this.getWorld());
-
         map.getRenderers().clear();
         map.setCenterX(64);
         map.setCenterZ(64);
-        map.addRenderer(new QRCodeGenerator(getAddon(), data));
+        map.addRenderer(new QRCodeGenerator(getAddon(), qrCode));
         ItemStack item = new ItemStack(Material.FILLED_MAP);
         ItemMeta m = item.getItemMeta();
         MapMeta meta = (MapMeta) m;

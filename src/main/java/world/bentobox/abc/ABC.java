@@ -1,6 +1,5 @@
 package world.bentobox.abc;
 
-import java.nio.charset.Charset;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
@@ -17,6 +16,7 @@ import com.hivemq.client.mqtt.mqtt5.Mqtt5Client;
 import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5Publish;
 
 import world.bentobox.abc.commands.AdminCommand;
+import world.bentobox.abc.crypto.Crypto;
 import world.bentobox.abc.dos.Code;
 import world.bentobox.abc.dos.Settings;
 import world.bentobox.abc.qr.QRCodeGenerator;
@@ -40,7 +40,7 @@ public final class ABC extends Addon {
 
     private Database<Code> database;
 
-
+    private Crypto crypto;
 
     @Override
     public void onLoad() {
@@ -68,18 +68,19 @@ public final class ABC extends Addon {
     public void onEnable() {
         getPlugin().getAddonsManager().getGameModeAddons().stream()
         .forEach(gm -> {
-            log("ABC hooking into " + gm.getDescription().getName());
+            log("BentoBox money hooking into " + gm.getDescription().getName());
             gm.getAdminCommand().ifPresent(adminCommand -> new AdminCommand(this, adminCommand));
         });
+        // Crypto
+        crypto = new Crypto(this);
+        // Server
         client = Mqtt5Client.builder()
                 .identifier(UUID.randomUUID().toString())
                 .serverHost(settings.getHost())
                 .buildBlocking();
-        log("Built and trying to connect");
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
             client.connect();
-            log("Connected");
-            log("Subscribing");
+            log("Connected to BentoBox money announcement server");
             client.toAsync().subscribeWith()
             .topicFilter("bentobox/abc/" + settings.getAdminUUID().toString())
             .qos(MqttQos.AT_MOST_ONCE)
@@ -92,16 +93,15 @@ public final class ABC extends Addon {
         // Load any maps
         List<Code> maps = database.loadObjects();
         maps.forEach(code -> {
+            @SuppressWarnings("deprecation")
             MapView map = Bukkit.getMap(Integer.valueOf(code.getUniqueId()));
             if (map == null) {
                 database.deleteID(code.getUniqueId());
-                log("Deleted map #"+ code.getUniqueId());
             } else {
                 map.getRenderers().clear();
                 map.setCenterX(64);
                 map.setCenterZ(64);
-                map.addRenderer(new QRCodeGenerator(this, this.getGson().toJson(code)));
-                log("Added map #" + code.getUniqueId());
+                map.addRenderer(new QRCodeGenerator(this, code));
             }
         });
     }
@@ -129,19 +129,19 @@ public final class ABC extends Addon {
     private void process(Mqtt5Publish cb) {
         byte[] payload = cb.getPayloadAsBytes();
         if (payload.length == 0) return;
-        String topic = cb.getTopic().toString();
         String p = new String(payload);
-        BentoBox.getInstance().logDebug("Received message on topic " + topic + " " + p);
         String json = new String(Base64.getUrlDecoder().decode(p));
-        BentoBox.getInstance().logDebug("JSON: " + json);
         Code code = gson.fromJson(json, Code.class);
         // Run checks on the code
-        // Substitute in the player
-        // TODO
-        // Execute the command
-        BentoBox.getInstance().logDebug("Running: " + code.getCommand());
-        Bukkit.getScheduler().runTask(getPlugin(), () ->
-        Bukkit.getServer().dispatchCommand(getServer().getConsoleSender(), code.getCommand()));
+        boolean hashVerified = getCrypto().verify(code.toString(), code.getHash());
+        if (hashVerified) {
+            // Execute the command
+            Bukkit.getScheduler().runTask(getPlugin(), () ->
+            Bukkit.getServer().dispatchCommand(getServer().getConsoleSender(), code.getCommand()));
+        } else {
+            BentoBox.getInstance().logError("Signature verification failed!\n" + code);
+            BentoBox.getInstance().logError("This could indicate a hacking attempt.");
+        }
     }
 
     public Gson getGson() {
@@ -156,5 +156,12 @@ public final class ABC extends Addon {
 
     public void saveMap(Code code) {
         database.saveObject(code);
+    }
+
+    /**
+     * @return the crypto
+     */
+    public Crypto getCrypto() {
+        return crypto;
     }
 }

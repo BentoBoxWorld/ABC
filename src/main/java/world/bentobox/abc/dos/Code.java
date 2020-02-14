@@ -24,11 +24,23 @@ public class Code implements DataObject {
     @Expose
     private String command;
     @Expose
-    private String txId;
-    @Expose
     private UUID nonce;
     @Expose
     private String hash;
+
+    public Code(Code code) {
+        this.uniqueId = code.uniqueId;
+        this.payTo = code.payTo;
+        this.amount = code.amount;
+        this.id = code.id;
+        this.command = code.command;
+        this.nonce = UUID.randomUUID();
+        this.hash = code.hash;
+    }
+
+    public Code() {
+        this.nonce = UUID.randomUUID();
+    }
 
     /* (non-Javadoc)
      * @see world.bentobox.bentobox.database.objects.DataObject#getUniqueId()
@@ -103,20 +115,6 @@ public class Code implements DataObject {
     }
 
     /**
-     * @return the txId
-     */
-    public String getTxId() {
-        return txId;
-    }
-
-    /**
-     * @param txId the txId to set
-     */
-    public void setTxId(String txId) {
-        this.txId = txId;
-    }
-
-    /**
      * @return the nonce
      */
     public UUID getNonce() {
@@ -142,5 +140,16 @@ public class Code implements DataObject {
      */
     public void setHash(String hash) {
         this.hash = hash;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "Code [" + (uniqueId != null ? "uniqueId=" + uniqueId + ", " : "")
+                + (payTo != null ? "payTo=" + payTo + ", " : "") + (amount != null ? "amount=" + amount + ", " : "")
+                + (id != null ? "id=" + id + ", " : "")
+                + (nonce != null ? "nonce=" + nonce : "") + "]";
     }
 }

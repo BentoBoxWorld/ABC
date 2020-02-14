@@ -22,7 +22,7 @@ public class Settings implements ConfigObject {
     private String adminCommand = "abc";
 
 
-    @ConfigComment("Transaction announcement server host")
+    @ConfigComment("Transaction announcement server host. Note that this is a public server.")
     @ConfigEntry(path = "abc.servers")
     private String host = "broker.mqttdashboard.com";
 

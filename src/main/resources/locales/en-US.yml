@@ -1,0 +1,7 @@
+abc:
+  commands:
+    admin:
+      help:
+        parameters: "<cost> <command to run if paid>"
+        description: "create a payment map that will run a command for a price"
+        
