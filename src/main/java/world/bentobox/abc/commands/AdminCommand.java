@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -24,6 +25,8 @@ import world.bentobox.bentobox.api.user.User;
  */
 public class AdminCommand extends CompositeCommand {
 
+
+    private Long price;
 
     public AdminCommand(ABC addon, CompositeCommand adminCommand) {
         super(addon, adminCommand,
@@ -46,6 +49,17 @@ public class AdminCommand extends CompositeCommand {
             showHelp(this, user);
             return false;
         }
+        // First argument must be a price
+        if (!NumberUtils.isDigits(args.get(0))) {
+            user.sendMessage("abc.commands.admin.error.no-price");
+            return false;
+        }
+        try {
+            price = Long.valueOf(args.get(0));
+        } catch (Exception e) {
+            user.sendMessage("abc.commands.admin.error.not-integer");
+            return false;
+        }
         return true;
     }
 
@@ -57,7 +71,7 @@ public class AdminCommand extends CompositeCommand {
         // Command is abc [cost] [command]
         // Create QR code elements
         Code qrCode = new Code();
-        qrCode.setAmount(Long.valueOf(args.get(0)));
+        qrCode.setAmount(price);
         // Create command
         qrCode.setCommand(String.join(" ", args.stream().skip(1).collect(Collectors.toList())));
         qrCode.setId(((ABC)getAddon()).getSettings().getAdminUUID());
