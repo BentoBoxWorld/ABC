@@ -19,6 +19,7 @@ import world.bentobox.abc.commands.AdminCommand;
 import world.bentobox.abc.crypto.Crypto;
 import world.bentobox.abc.dos.Code;
 import world.bentobox.abc.dos.Settings;
+import world.bentobox.abc.listeners.JoinLeaveListener;
 import world.bentobox.abc.qr.QRCodeGenerator;
 import world.bentobox.bentobox.BentoBox;
 import world.bentobox.bentobox.api.addons.Addon;
@@ -104,6 +105,8 @@ public final class ABC extends Addon {
                 map.addRenderer(new QRCodeGenerator(this, code));
             }
         });
+        // Register listeners
+        registerListener(new JoinLeaveListener(this));
     }
 
     @Override
@@ -163,5 +166,12 @@ public final class ABC extends Addon {
      */
     public Crypto getCrypto() {
         return crypto;
+    }
+
+    /**
+     * @return the client
+     */
+    public Mqtt5BlockingClient getClient() {
+        return client;
     }
 }

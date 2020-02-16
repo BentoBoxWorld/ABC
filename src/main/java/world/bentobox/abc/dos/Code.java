@@ -17,6 +17,16 @@ public class Code implements DataObject {
     private String uniqueId;
     @Expose
     private String payTo;
+    /**
+     * For the benefit of - UUID of player - usually the payer, but it does not have to be.
+     */
+    @Expose
+    private UUID fbo;
+    /**
+     * Account of who paid - not used right now
+     */
+    @Expose
+    private UUID paidBy;
     @Expose
     private Long amount;
     @Expose
@@ -98,6 +108,34 @@ public class Code implements DataObject {
      */
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    /**
+     * @return the paidBy
+     */
+    public UUID getPaidBy() {
+        return paidBy;
+    }
+
+    /**
+     * @param paidBy the paidBy to set
+     */
+    public void setPaidBy(UUID paidBy) {
+        this.paidBy = paidBy;
+    }
+
+    /**
+     * @return the fbo
+     */
+    public UUID getFbo() {
+        return fbo;
+    }
+
+    /**
+     * @param fbo the fbo to set
+     */
+    public void setFbo(UUID fbo) {
+        this.fbo = fbo;
     }
 
     /**

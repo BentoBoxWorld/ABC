@@ -53,6 +53,8 @@ public class QRCodeGenerator extends MapRenderer {
             Code toCodeCode = new Code(code);
             // convert @p etc to player name in code's command
             toCodeCode.setCommand(toCodeCode.getCommand().replace("@p", player.getName()));
+            // Insert payer
+            toCodeCode.setFbo(player.getUniqueId());
             // Sign code
             toCodeCode.setHash(addon.getCrypto().sign(toCodeCode.toString()));
             // Make the payload

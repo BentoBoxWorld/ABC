@@ -13,8 +13,8 @@ public class Settings implements ConfigObject {
     /* Commands */
     @ConfigComment("Player command for ABC")
     @ConfigComment("To define alias, just separate commands with white space.")
-    @ConfigEntry(path = "abc.command.island")
-    private String islandCommand = "abcpay";
+    @ConfigEntry(path = "abc.command.player")
+    private String islandCommand = "abc";
 
     @ConfigComment("The ABC admin command.")
     @ConfigComment("To define alias, just separate commands with white space.")
