@@ -1,7 +1,5 @@
 package world.bentobox.abc.dos;
 
-import java.util.UUID;
-
 import world.bentobox.bentobox.api.configuration.ConfigComment;
 import world.bentobox.bentobox.api.configuration.ConfigEntry;
 import world.bentobox.bentobox.api.configuration.ConfigObject;
@@ -32,7 +30,7 @@ public class Settings implements ConfigObject {
     @ConfigComment("Format must include dashes, e.g., 5988eecd-1dcd-4080-a843-785b62419")
     @ConfigComment("Google 'Minecraft UUID lookup' if you need to find out your UUID.")
     @ConfigEntry(path = "abc.admin-uuid")
-    private UUID adminUUID = UUID.fromString("5988eecd-1dcd-4080-a843-785b62419");
+    private String adminUUID = "5988eecd-1dcd-4080-a843-785b62419";
 
     @ConfigComment("Name of your server")
     @ConfigEntry(path = "abc.server-name")
@@ -83,14 +81,14 @@ public class Settings implements ConfigObject {
     /**
      * @return the adminUUID
      */
-    public UUID getAdminUUID() {
+    public String getAdminUUID() {
         return adminUUID;
     }
 
     /**
      * @param adminUUID the adminUUID to set
      */
-    public void setAdminUUID(UUID adminUUID) {
+    public void setAdminUUID(String adminUUID) {
         this.adminUUID = adminUUID;
     }
 

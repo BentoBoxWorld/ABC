@@ -1,5 +1,8 @@
 package world.bentobox.abc;
 
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
@@ -15,7 +18,9 @@ import com.hivemq.client.mqtt.mqtt5.Mqtt5BlockingClient;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5Client;
 import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5Publish;
 
+import okhttp3.OkHttpClient;
 import world.bentobox.abc.commands.AdminCommand;
+import world.bentobox.abc.commands.UserCommand;
 import world.bentobox.abc.crypto.Crypto;
 import world.bentobox.abc.dos.Code;
 import world.bentobox.abc.dos.Settings;
@@ -43,12 +48,23 @@ public final class ABC extends Addon {
 
     private Crypto crypto;
 
+    // one instance, reuse
+    private final OkHttpClient httpClient = new OkHttpClient();
+
     @Override
     public void onLoad() {
         // Save the default config from config.yml
         saveDefaultConfig();
         // Load settings from config.yml. This will check if there are any issues with it too.
         loadSettings();
+        // Crypto
+        try {
+            crypto = new Crypto(this);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException | IOException e) {
+            logError("Hmm, this server does not seem to support crypto. Disabling addon. " + e.getMessage());
+            this.setState(State.DISABLED);
+            return;
+        }
     }
 
     private boolean loadSettings() {
@@ -67,28 +83,24 @@ public final class ABC extends Addon {
 
     @Override
     public void onEnable() {
+        // Get gson
+        getGson();
+        // Hook into game modes
         getPlugin().getAddonsManager().getGameModeAddons().stream()
         .forEach(gm -> {
-            log("BentoBox money hooking into " + gm.getDescription().getName());
+            log("ABC hooking into " + gm.getDescription().getName());
             gm.getAdminCommand().ifPresent(adminCommand -> new AdminCommand(this, adminCommand));
+            gm.getPlayerCommand().ifPresent(playerCommand -> new UserCommand(this, playerCommand));
         });
-        // Crypto
-        crypto = new Crypto(this);
-        // Server
-        client = Mqtt5Client.builder()
-                .identifier(UUID.randomUUID().toString())
-                .serverHost(settings.getHost())
-                .buildBlocking();
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
-            client.connect();
-            log("Connected to BentoBox money announcement server");
-            client.toAsync().subscribeWith()
-            .topicFilter("bentobox/abc/" + settings.getAdminUUID().toString())
-            .qos(MqttQos.AT_MOST_ONCE)
-            .callback(this::process)
-            .send();
-        });
-        getGson();
+        // Subscribe to topics
+        subscribe();
+        // Load maps
+        loadMaps();
+        // Register listeners
+        registerListener(new JoinLeaveListener(this));
+    }
+
+    private void loadMaps() {
         log("Loading maps");
         database = new Database<>(this, Code.class);
         // Load any maps
@@ -105,8 +117,26 @@ public final class ABC extends Addon {
                 map.addRenderer(new QRCodeGenerator(this, code));
             }
         });
-        // Register listeners
-        registerListener(new JoinLeaveListener(this));
+
+    }
+
+    private void subscribe() {
+        // Server
+        client = Mqtt5Client.builder()
+                .identifier(UUID.randomUUID().toString())
+                .serverHost(settings.getHost())
+                .buildBlocking();
+        // Announcement server
+        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> {
+            client.connect();
+            log("Connected to ABC announcement server");
+            client.toAsync().subscribeWith()
+            .topicFilter("bentobox/abc/" + settings.getAdminUUID().toString())
+            .qos(MqttQos.AT_MOST_ONCE)
+            .callback(this::process)
+            .send();
+        });
+
     }
 
     @Override
@@ -173,5 +203,12 @@ public final class ABC extends Addon {
      */
     public Mqtt5BlockingClient getClient() {
         return client;
+    }
+
+    /**
+     * @return the httpClient
+     */
+    public OkHttpClient getHttpClient() {
+        return httpClient;
     }
 }

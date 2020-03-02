@@ -40,7 +40,7 @@ public class AdminCommand extends CompositeCommand {
         setOnlyPlayer(false);
         setParametersHelp("abc.commands.admin.help.parameters");
         setDescription("abc.commands.admin.help.description");
-
+        new AdminPay(this.getAddon(), this);
     }
 
     @Override

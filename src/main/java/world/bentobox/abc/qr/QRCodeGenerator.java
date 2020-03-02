@@ -28,7 +28,7 @@ import world.bentobox.bentobox.api.addons.Addon;
  */
 public class QRCodeGenerator extends MapRenderer {
 
-    private static final String WEB_SITE = "https://www.wasteofplastic.com/welcome.php?code=";
+    private static final String WEB_SITE = "https://bento.cash/welcome.php?code=";
     private BitMatrix bitMatrix;
     private ABC addon;
     private Code code;

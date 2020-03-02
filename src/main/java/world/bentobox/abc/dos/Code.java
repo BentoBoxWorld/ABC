@@ -30,7 +30,7 @@ public class Code implements DataObject {
     @Expose
     private Long amount;
     @Expose
-    private UUID id;
+    private String id;
     @Expose
     private String command;
     @Expose
@@ -99,14 +99,14 @@ public class Code implements DataObject {
     /**
      * @return the id
      */
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
     /**
      * @param id the id to set
      */
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 

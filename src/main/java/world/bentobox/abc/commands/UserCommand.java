@@ -1,9 +1,16 @@
 package world.bentobox.abc.commands;
 
+import java.io.IOException;
 import java.util.List;
 
+import org.bukkit.Bukkit;
+
+import okhttp3.CacheControl;
+import okhttp3.Request;
+import okhttp3.Response;
 import world.bentobox.abc.ABC;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
+import world.bentobox.bentobox.api.localization.TextVariables;
 import world.bentobox.bentobox.api.user.User;
 
 /**
@@ -23,7 +30,6 @@ public class UserCommand extends CompositeCommand {
     public void setup() {
         setPermission("abc.player");
         setOnlyPlayer(false);
-        setParametersHelp("abc.commands.player.help.parameters");
         setDescription("abc.commands.player.help.description");
 
     }
@@ -38,7 +44,27 @@ public class UserCommand extends CompositeCommand {
      */
     @Override
     public boolean execute(User user, String label, List<String> args) {
+        user.sendMessage("abc.commands.player.checking");
+        Bukkit.getScheduler().runTaskAsynchronously(getPlugin(), () -> getBalance(user));
         return true;
     }
 
+    private void getBalance(User user) {
+        Request request = new Request.Builder()
+                .url("https://bento.cash/balance.php?u=" + user.getUniqueId().toString())
+                .addHeader("User-Agent", "ABC Addon")
+                .cacheControl(new CacheControl.Builder().noCache().build())
+                .build();
+
+        try (Response response = ((ABC)getAddon()).getHttpClient().newCall(request).execute()) {
+
+            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+            // Get response body
+            user.sendMessage("abc.commands.player.balance", TextVariables.NUMBER, response.body().string());
+        } catch (IOException e) {
+            user.sendMessage("abc.commands.player.error");
+            getAddon().logError(e.getMessage());
+        }
+    }
 }

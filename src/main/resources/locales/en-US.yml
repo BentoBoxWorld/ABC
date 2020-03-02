@@ -1,9 +1,29 @@
 abc:
   commands:
     admin:
+      pay:
+        parameters: "<player> <amount> <admin account password>"
+        description: "pay a player from the admin account"
+        error: "&c Error: [error]"
+        missing-data: "&c Request is missing data."
+        positive-amount: "&c Amount has to be > 0"
+        payer-payee-cannot-be-same: "&c Payer and payee cannot be the same"
+        insufficient-balance: "&c Balance is insufficient to pay"
+        success: "&a Success! You paid ABC$[number]"
+        failed-to-deduct: "&c Amount could not be deducted"
+        unknown-recipient: "&c Unknown recipient: no account for this player yet"
+        invalid-password: "&c Invalid password"
+        invalid-account: "&c Invalid account"
+        try-again-later: "&c Hmm, there seems to be a problem. Please try again later."
       help:
         parameters: "<cost> <command to run if paid>"
         description: "create a payment map that will run a command for a price"
       error:
         no-price: "&c First argument must be a number for the cost"
         not-integer: "&c Cost must be an integer"
+    player:
+      help:
+        description: "shows your balance"
+      checking: "&a Checking balance..."
+      balance: "&a Your balance is &bABC$[number]"
+      error: "&b Hmm, there seems to be a problem. Please try again later."
