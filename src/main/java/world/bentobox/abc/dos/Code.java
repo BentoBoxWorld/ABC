@@ -32,7 +32,7 @@ public class Code implements DataObject {
     @Expose
     private String id;
     @Expose
-    private String command;
+    private String command = "";
     @Expose
     private UUID nonce;
     @Expose
@@ -44,7 +44,7 @@ public class Code implements DataObject {
         this.amount = code.amount;
         this.id = code.id;
         this.command = code.command;
-        this.nonce = UUID.randomUUID();
+        this.nonce = code.nonce;
         this.hash = code.hash;
     }
 

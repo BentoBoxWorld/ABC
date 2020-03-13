@@ -29,9 +29,9 @@ public class UserCommand extends CompositeCommand {
     @Override
     public void setup() {
         setPermission("abc.player");
-        setOnlyPlayer(false);
+        setOnlyPlayer(true);
         setDescription("abc.commands.player.help.description");
-
+        new UserPaymeCommand(getAddon(), this, false);
     }
 
     @Override

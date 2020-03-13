@@ -8,3 +8,21 @@ prefix: ABC
 authors: [tastybento]
 
 softdepend: AcidIsland, BSkyBlock, CaveBlock, SkyGrid
+
+permissions:
+  abc.player: 
+    default: true
+    description: "Allow use of the abc balance command"
+  abc.payme: 
+    default: true
+    description: "Allow use of the abc payme command"
+  admin.abc:
+    default: op
+    description: "Admin command"
+  admin.abc.map:
+    default: op
+    description: "Create a payment map that runs a command when paid"
+  admin.abc.map.name:
+    default: op
+    description: "Be able to rename a payment map"
+      

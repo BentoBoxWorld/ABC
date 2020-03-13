@@ -4,6 +4,7 @@ import java.util.Base64;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -65,8 +66,11 @@ public class JoinLeaveListener implements Listener {
         String json = new String(Base64.getUrlDecoder().decode(p));
         Code code = addon.getGson().fromJson(json, Code.class);
         // Verify player
-        if (uuid.equals(code.getId())) {
-            User.getInstance(pl).sendMessage("abc.payment.you-got-money", TextVariables.NUMBER, String.valueOf(code.getAmount()));
+        if (uuid.toString().equals(code.getId())) {
+            String name = addon.getPlayers().getName(code.getPaidBy());
+            if (name.isEmpty()) name = "Unknown";
+            User.getInstance(pl).sendMessage("abc.payment.you-got-money", TextVariables.NUMBER, String.valueOf(code.getAmount()), TextVariables.NAME, name);
+            pl.playSound(pl.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1F, 2F);
         } else {
             addon.logError("A payment notification for " + pl.getName() + " (" + pl.getUniqueId() + ") was received but the security check failed.");
         }

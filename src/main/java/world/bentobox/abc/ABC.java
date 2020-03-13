@@ -123,6 +123,7 @@ public final class ABC extends Addon {
     private void subscribe() {
         // Server
         client = Mqtt5Client.builder()
+                .automaticReconnectWithDefaultConfig()
                 .identifier(UUID.randomUUID().toString())
                 .serverHost(settings.getHost())
                 .buildBlocking();
@@ -141,7 +142,13 @@ public final class ABC extends Addon {
 
     @Override
     public void onDisable() {
-        if (client != null ) client.disconnect();
+        if (client != null ) {
+            try {
+                client.disconnect();
+            } catch (Exception e) {
+                // do nothing
+            }
+        }
     }
 
     public Settings getSettings() {
@@ -167,7 +174,7 @@ public final class ABC extends Addon {
         Code code = gson.fromJson(json, Code.class);
         // Run checks on the code
         boolean hashVerified = getCrypto().verify(code.toString(), code.getHash());
-        if (hashVerified) {
+        if (hashVerified && !code.getCommand().isEmpty()) {
             // Execute the command
             Bukkit.getScheduler().runTask(getPlugin(), () ->
             Bukkit.getServer().dispatchCommand(getServer().getConsoleSender(), code.getCommand()));

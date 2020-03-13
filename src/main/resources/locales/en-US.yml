@@ -1,6 +1,10 @@
 abc:
+  payment:
+    you-got-money: "&b [name] paid you ABC$[number]!"
   commands:
     admin:
+      help:
+        description: "Bento cash admin command"
       pay:
         parameters: "<player> <amount> <admin account password>"
         description: "pay a player from the admin account"
@@ -15,7 +19,7 @@ abc:
         invalid-password: "&c Invalid password"
         invalid-account: "&c Invalid account"
         try-again-later: "&c Hmm, there seems to be a problem. Please try again later."
-      help:
+      map:
         parameters: "<cost> <command to run if paid>"
         description: "create a payment map that will run a command for a price"
       error:
