@@ -26,7 +26,7 @@ public class Code implements DataObject {
      * Account of who paid - not used right now
      */
     @Expose
-    private UUID paidBy;
+    private String paidBy;
     @Expose
     private Long amount;
     @Expose
@@ -113,14 +113,14 @@ public class Code implements DataObject {
     /**
      * @return the paidBy
      */
-    public UUID getPaidBy() {
+    public String getPaidBy() {
         return paidBy;
     }
 
     /**
      * @param paidBy the paidBy to set
      */
-    public void setPaidBy(UUID paidBy) {
+    public void setPaidBy(String paidBy) {
         this.paidBy = paidBy;
     }
 

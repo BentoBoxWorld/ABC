@@ -67,10 +67,12 @@ public class JoinLeaveListener implements Listener {
         Code code = addon.getGson().fromJson(json, Code.class);
         // Verify player
         if (uuid.toString().equals(code.getId())) {
-            String name = addon.getPlayers().getName(code.getPaidBy());
+            String name = code.getPaidBy();
             if (name.isEmpty()) name = "Unknown";
             User.getInstance(pl).sendMessage("abc.payment.you-got-money", TextVariables.NUMBER, String.valueOf(code.getAmount()), TextVariables.NAME, name);
-            pl.playSound(pl.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1F, 2F);
+            for (float pitch = 1; pitch < 4; pitch++) {
+                pl.playSound(pl.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1F, pitch);
+            }
         } else {
             addon.logError("A payment notification for " + pl.getName() + " (" + pl.getUniqueId() + ") was received but the security check failed.");
         }
