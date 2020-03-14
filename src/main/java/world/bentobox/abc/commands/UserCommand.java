@@ -32,6 +32,7 @@ public class UserCommand extends CompositeCommand {
         setOnlyPlayer(true);
         setDescription("abc.commands.player.help.description");
         new UserPaymeCommand(getAddon(), this, false);
+        new CashXpCommand(getAddon(), this);
     }
 
     @Override

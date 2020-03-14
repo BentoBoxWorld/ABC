@@ -18,6 +18,7 @@ abc:
         unknown-recipient: "&c Unknown recipient: no account for this player yet"
         invalid-password: "&c Invalid password"
         invalid-account: "&c Invalid account"
+        set-password: "&c Set the admin password in the config or use the setpassword admin command"
         try-again-later: "&c Hmm, there seems to be a problem. Please try again later."
       map:
         parameters: "<cost> <command to run if paid>"
@@ -31,3 +32,13 @@ abc:
       checking: "&a Checking balance..."
       balance: "&a Your balance is &bABC$[number]"
       error: "&b Hmm, there seems to be a problem. Please try again later."
+      cashxp:
+        convert: "Convert [number]% of your xp to Bento Cash?"
+        parameters: "<percentage of your xp>"
+        description: "convert xp to Bento Cash"
+        you-will-make: "&b You will make ABC$[number]."
+        rate: "&b (ABC$1 = [number]xp)"
+        success: "&a You made ABC$[number]!"
+        fail: "&c Conversion failed. The Admin has been notified. Please try again later."
+        need-xp: "&c You need to earn experience before you can cash it to Bentos"
+        

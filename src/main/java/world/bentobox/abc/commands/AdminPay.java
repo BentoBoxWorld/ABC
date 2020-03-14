@@ -48,7 +48,12 @@ public class AdminPay extends CompositeCommand {
 
     @Override
     public boolean canExecute(User user, String label, List<String> args) {
-        if (args.size() != 3) {
+        // Check admin password
+        if (addon.getSettings().getAdminPassword().isEmpty()) {
+            user.sendMessage("abc.commands.admin.pay.set-password");
+            return false;
+        }
+        if (args.size() != 2) {
             this.showHelp(this, user);
             return false;
         }
@@ -59,7 +64,8 @@ public class AdminPay extends CompositeCommand {
             return false;
         }
         // Player cannot ban themselves
-        if (targetUUID.equals(addon.getSettings().getAdminUUID())) {
+        UUID adminUUID = UUID.fromString(addon.getSettings().getAdminUUID());
+        if (targetUUID.equals(adminUUID)) {
             user.sendMessage("abc.commands.admin.pay.cannot-pay-yourself");
             return false;
         }
@@ -75,7 +81,7 @@ public class AdminPay extends CompositeCommand {
             }
         }
         if (amount <= 0) {
-            user.sendMessage("abc.commands.admin.pay.greater-than-zero");
+            user.sendMessage("abc.commands.admin.pay.positive-amount");
             return false;
         }
         // Password can be anything
@@ -91,9 +97,9 @@ public class AdminPay extends CompositeCommand {
         // Admin pay <player> <amount> <password>
         PayTo payObj = new PayTo();
         payObj.setAmount(amount);
-        payObj.setPayFrom(addon.getSettings().getAdminUUID().toString());
+        payObj.setPayFrom(addon.getSettings().getAdminUUID());
         payObj.setPayTo(targetUUID.toString());
-        payObj.setPassword(args.get(2));
+        payObj.setPassword(addon.getSettings().getAdminPassword());
         String payObjJson = addon.getGson().toJson(payObj);
         payPlayer(user, payObjJson);
         return false;

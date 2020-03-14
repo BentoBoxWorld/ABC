@@ -32,9 +32,19 @@ public class Settings implements ConfigObject {
     @ConfigEntry(path = "abc.admin-uuid")
     private String adminUUID = "5988eecd-1dcd-4080-a843-785b62419";
 
+    @ConfigComment("Admin password. If you don't want to put this in a config file, leave it blank")
+    @ConfigComment("and set it with the abc admin setpassword command on every server restart.")
+    @ConfigEntry(path = "abc.admin-password")
+    private String adminPassword = "";
+
     @ConfigComment("Name of your server")
     @ConfigEntry(path = "abc.server-name")
     private String serverName = "A BentoBox Server";
+
+    @ConfigComment("How many xp you will buy for ABC$1 Bento Cash")
+    @ConfigComment("when the player runs the cashxp command. The amount is paid from the admin account.")
+    @ConfigEntry(path = "abc.exchange-rate")
+    private int exchangeRate = 100;
 
     /**
      * @return the islandCommand
@@ -93,6 +103,20 @@ public class Settings implements ConfigObject {
     }
 
     /**
+     * @return the adminPassword
+     */
+    public String getAdminPassword() {
+        return adminPassword;
+    }
+
+    /**
+     * @param adminPassword the adminPassword to set
+     */
+    public void setAdminPassword(String adminPassword) {
+        this.adminPassword = adminPassword;
+    }
+
+    /**
      * @return the serverName
      */
     public String getServerName() {
@@ -104,6 +128,20 @@ public class Settings implements ConfigObject {
      */
     public void setServerName(String serverName) {
         this.serverName = serverName;
+    }
+
+    /**
+     * @return the exchangeRate
+     */
+    public int getExchangeRate() {
+        return exchangeRate;
+    }
+
+    /**
+     * @param exchangeRate the exchangeRate to set
+     */
+    public void setExchangeRate(int exchangeRate) {
+        this.exchangeRate = exchangeRate;
     }
 
 
