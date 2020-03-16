@@ -15,7 +15,7 @@ import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.user.User;
 
 /**
- * Admin command to make QR codes
+ * Admin command to rename maps
  * @author tastybento
  *
  */

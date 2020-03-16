@@ -5,8 +5,11 @@ abc:
     admin:
       help:
         description: "Bento cash admin command"
+      password:
+        description: "Set the admin password for Bento Cash payments"
+        success: "&b Set admin password"
       pay:
-        parameters: "<player> <amount> <admin account password>"
+        parameters: "<player> <amount>"
         description: "pay a player from the admin account"
         error: "&c Error: [error]"
         missing-data: "&c Request is missing data."

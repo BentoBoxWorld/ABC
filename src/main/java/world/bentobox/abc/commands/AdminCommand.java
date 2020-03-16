@@ -7,7 +7,7 @@ import world.bentobox.bentobox.api.commands.CompositeCommand;
 import world.bentobox.bentobox.api.user.User;
 
 /**
- * Admin command to make QR codes
+ * Admin command for Bento Cash
  * @author tastybento
  *
  */
@@ -26,6 +26,7 @@ public class AdminCommand extends CompositeCommand {
         setDescription("abc.commands.admin.help.description");
         new AdminPay(this.getAddon(), this);
         new AdminMapCommand(this.getAddon(), this);
+        new AdminPasswordCommand(getAddon(), this);
     }
 
     @Override
